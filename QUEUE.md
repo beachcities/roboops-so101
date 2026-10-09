@@ -15,7 +15,8 @@
 ## 玉1：環境同定（ready 2026-08-30〜／実機不要／所要目安10分）
 1. `lsb_release -a`（無ければ `cat /etc/os-release`）、`uname -r`、`free -h`、`df -h /`、`lsusb -t`、`nvidia-smi`（無ければ「GPU無し」と記録）を実行。
 2. 結果を `ENV.md` に整理して書く。**Ubuntuのバージョンは最重要**（24.04→ROS2 Jazzy／22.04→Humble の分岐入力になる。分岐の中身は ROS2_EVAL.md 参照）。
-3. commit・push し、REPORTS/ に報告を書く。
+3. `git config user.name` と `git config user.email` が実名・実メールかどうかだけを ENV.md に「実名／非実名」「noreply／それ以外」の形で記録する（値そのものは書かない）。
+4. commit・push し、REPORTS/ に報告を書く。
 
 ## 玉2：現行構成の吸い上げ（ready 2026-08-30〜／実機不要／所要目安30分）
 1. `/home/masayuki/so101/` 配下の CLAUDE.md・スクリプト・設定メモ類を `legacy/so101-workspace/` へコピーする。
@@ -29,7 +30,7 @@
 1. lerobotのローカルデータセット置き場（既定は `~/.cache/huggingface/lerobot/`、環境変数 `HF_LEROBOT_HOME` があればそちら）と `/home/masayuki/so101/` 配下を調べ、`so101-pickplace` 系（`so101-pickplace`、`so101-pickplace-test` ほか）のデータセットを全て列挙する。
 2. 各データセットについて `meta/info.json` から `total_episodes`・`total_frames`・`fps`・カメラ名（features の observation.images.*）・`codebase_version` を記録し、`meta/tasks.jsonl`（または tasks.parquet）のタスク文字列を記録する。最終更新日時（`ls -l --time-style=long-iso`）も添える。
 3. 動画が開けるか確認する：各データセットの最初のエピソードの動画1本について `ffprobe` でコーデック・解像度・長さを記録する（再生や画像の書き出しはしない）。
-4. `/home/masayuki/lerobot-venv` の lerobot について、バージョン、`lerobot/policies/` 配下に `smolvla` と `act` があるか、`lerobot-train --help`（無ければ `python -m lerobot.scripts.train --help`）で `--policy.type` に smolvla が指定できるかを記録する。インストールや更新はしない。
+4. `/home/masayuki/lerobot-venv` の lerobot について、バージョン、`lerobot/policies/` 配下に `smolvla` と `act` があるか、`lerobot-train --help`（無ければ `python -m lerobot.scripts.train --help`）で `--policy.type` に smolvla が指定できるかを記録する。あわせて venv の python で `from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy` と `from lerobot.policies.act.modeling_act import ACTPolicy` を試し、成功／エラー全文を記録する（SmolVLAは追加依存 `lerobot[smolvla]`＝transformers・num2words・accelerate が要る。chatがGitHubの上流ソースで確認、2026-10-09）。インストールや更新はしない。
 5. 結果を `DATASETS.md` に書く。commit・push し、REPORTS/ に報告を書く。データセット本体（動画・parquet）はcommitしない。
 
 ## 玉3：InnoMaker接続確認と2カメラ帯域実測（ready 2026-08-30〜／カメラのみ・アーム非駆動／所要目安40分）
